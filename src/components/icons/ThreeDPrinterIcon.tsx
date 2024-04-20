@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react'
 
 export interface IconProps {
-  size?: number; // Add any additional props that you need for the icon here
-  color?: string; // If you use color or other props, define them here
+  size?: number // Add any additional props that you need for the icon here
+  color?: string // If you use color or other props, define them here
 }
 
-const ThreeDPrinterIcon: React.FunctionComponent<IconProps> = ({ size = 24, color = "black", ...props }) => (
+const ThreeDPrinterIcon: React.FunctionComponent<IconProps> = ({ size = 24, color = 'black', ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={size} 
+    width={size}
     height={size}
-    fill={color} 
+    fill={color}
     viewBox="0 0 2048 2048"
     {...props}
   >
@@ -25,6 +25,5 @@ const ThreeDPrinterIcon: React.FunctionComponent<IconProps> = ({ size = 24, colo
       d="M911.5 486.4c-1.6.7-3.9 2.3-5 3.6-2 2.2-2 3.8-2.3 84.4-.2 80.7-.2 82.2 1.8 85.4 1.1 1.8 3.2 3.7 4.6 4.2 1.6.6 42.8 1 110.6 1 99.1 0 108.2-.1 110.8-1.7 5.7-3.3 5.5.2 5.5-88.4 0-81.4 0-81.8-2.1-84.6-1.1-1.5-3.6-3.3-5.5-4-5.2-1.8-214.2-1.7-218.4.1zm188.6 35.8c.4 1.1.8 101 .4 103.5l-.6 3.3h-79.4c-43.7 0-79.6-.4-79.9-.8s-.2-24.5.1-53.5l.6-52.7h79.4c43.6 0 79.3.1 79.4.2zm-611.6 30.4c-31.4 6.8-52.5 33.8-52.5 66.9 0 29.2 18.7 55.1 46.4 64.1 6.9 2.3 9.9 2.7 20.6 2.8 10.5.1 13.7-.3 20-2.2 18.9-5.9 33.6-18.4 42.1-35.8 15.1-31.1 4.7-67.1-25-86.6-14.2-9.3-34.6-12.9-51.6-9.2zm28.6 37.6c20 9.2 24.9 35.7 9.4 51.3-6.2 6.1-13.5 9-23 9-10.4-.1-16.7-2.7-23.4-10.1-5.8-6.4-8.1-12.4-8.1-21.4 0-9.3 2.3-15.1 8.4-21.6 9.8-10.5 23.7-13.2 36.7-7.2zm1008.5-37.6c-25 5.6-44.8 24.6-51.3 49.4-2.3 8.8-2.3 25.4 0 34 3.8 14.4 13.3 28.6 24.7 37.2 37.6 28.1 91.1 11.1 106.7-34 2.4-6.8 2.7-9.2 2.7-20.2-.1-10.8-.4-13.6-2.7-20.5-3.7-11.3-9-19.6-17.9-28-9-8.7-15.4-12.6-26.3-16.1-10.3-3.3-25.7-4.1-35.9-1.8zm28.5 37.5c6.9 3.3 12.4 8.8 15.8 15.9 3.4 7.3 3.5 18.2.4 25.2-3 6.6-9.5 13.3-16.2 16.5-4.8 2.4-6.8 2.8-14.1 2.7-10 0-16.1-2.4-22.5-8.9-6.4-6.4-8.9-12.5-8.9-22 0-15.4 7.9-26.3 22.7-31.1 6.3-2.1 16.2-1.3 22.8 1.7z"
     />
   </svg>
-);
-export default ThreeDPrinterIcon;
-
+)
+export default ThreeDPrinterIcon

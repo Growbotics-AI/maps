@@ -1,10 +1,9 @@
-import { FunctionComponent } from 'react';
-import colors from 'tailwindcss/colors';
-import { LocateFixed, LucideProps } from 'lucide-react';
-import ThreeDPrinterIcon from '../components/icons/ThreeDPrinterIcon';
-import LocalBusinessIcon from '../components/icons/LocalBusinessIcon';
-import HandWrenchIcon from '../components/icons/HandWrenchIcon';
-import RobosmithIcon from '../components/icons/RobosmithIcon';
+import { LocateFixed, LucideProps } from 'lucide-react'
+import { FunctionComponent } from 'react'
+
+import LocalBusinessIcon from '../components/icons/LocalBusinessIcon'
+import RobosmithIcon from '../components/icons/RobosmithIcon'
+import ThreeDPrinterIcon from '../components/icons/ThreeDPrinterIcon'
 
 export enum Category {
   LOCATE = 0,
@@ -14,16 +13,14 @@ export enum Category {
 }
 
 export interface MarkerCategoriesValues {
-  name: string;
-  icon: FunctionComponent<LucideProps> | FunctionComponent;
-  color: string;
-  iconColor?: string;
-  hideInMenu?: boolean;
+  name: string
+  icon: FunctionComponent<LucideProps> | FunctionComponent
+  color: string
+  iconColor?: string
+  hideInMenu?: boolean
 }
 
-type MarkerCategoryType = {
-  [key in Category]: MarkerCategoriesValues;
-};
+type MarkerCategoryType = { [key in Category]: MarkerCategoriesValues }
 
 const MarkerCategories: MarkerCategoryType = {
   [Category.LOCATE]: {
@@ -48,7 +45,6 @@ const MarkerCategories: MarkerCategoryType = {
     icon: LocalBusinessIcon, // Placeholder, change to a specific icon representing Techno Farmers
     color: '#FF6B6B', // Light red color for good contrast with white icon
   },
-};
+}
 
-
-export default MarkerCategories;
+export default MarkerCategories

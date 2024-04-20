@@ -1,6 +1,7 @@
 import Head from 'next/head'
+
 import Map from '#components/Map'
-import Sidebar from '#components/sidebar' // Adjust this path if necessary based on your project structure
+import Sidebar from '#components/sidebar'
 
 const MapPage = () => (
   <div className="flex">
@@ -17,7 +18,8 @@ const MapPage = () => (
       />
     </Head>
     <Sidebar />
-    <div className="flex-1"> {/* This wrapper ensures the map takes the remaining space */}
+    <div className="flex-1">
+      {/* This wrapper ensures the map takes the remaining space */}
       <Map />
     </div>
   </div>

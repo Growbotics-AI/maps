@@ -1,12 +1,12 @@
 {
-  "name": "nextjs-mapping-app",
+  "name": "growbotics-maps-app",
   "homepage": "https://solounicorn.substack.com",
   "version": "0.0.1",
   "license": "MIT",
   "author": "Tomas Ramanauskas <https://github.com/Tomas0413>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Growbotics-AI/solo-unicorn-code/tree/main/week-2/assignment-2" 
+    "url": "https://github.com/Growbotics-AI/maps" 
   },
   "scripts": {
     "dev": "next dev -H 0.0.0.0",

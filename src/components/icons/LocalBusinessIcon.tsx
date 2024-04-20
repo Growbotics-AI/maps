@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react'
 
 export interface IconProps {
-  size?: number; // You can add more props if needed, like color
-  color?: string; // This is if you want to allow changing the icon's color dynamically
+  size?: number // You can add more props if needed, like color
+  color?: string // This is if you want to allow changing the icon's color dynamically
 }
 
-const LocalBusinessIcon: React.FunctionComponent<IconProps> = ({ size = 24, color = "black", ...props }) => (
+const LocalBusinessIcon: React.FunctionComponent<IconProps> = ({ size = 24, color = 'black', ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={size} 
+    width={size}
     height={size}
-    fill={color} 
+    fill={color}
     viewBox="0 0 1024 1024"
     {...props}
   >
@@ -19,6 +19,5 @@ const LocalBusinessIcon: React.FunctionComponent<IconProps> = ({ size = 24, colo
     <path d="M362.9 608.7c-6.3 5.4-48.2 49.9-51.1 54.2-3.1 5-3.5 8.8-1.3 13.1 3.3 6.4 10.2 8.8 16.3 5.6 1.5-.8 11.5-10.6 22.3-21.8 35.7-37.1 34.8-36.1 34.9-41.1.1-10.6-13-16.8-21.1-10m261.6-48.8c-5.1 2.4-9.3 6.8-10.5 11.2-.6 2.1-1 31.1-1 74.8 0 70.4 0 71.5 2.1 75.8 1.1 2.3 3.5 5.3 5.2 6.5l3.2 2.3 66.4.3 66.4.2 4.4-2.6c3.4-2 5.1-3.9 6.9-7.9l2.5-5.3-.3-71.4c-.3-70.1-.3-71.4-2.4-75.3-1.1-2.2-4-5.4-6.3-7l-4.3-3-64.1-.2c-60.9-.3-64.4-.2-68.2 1.6M741 645v58h-99V587h99z" />
     <path d="M704 615.5c-3 1.6-44.7 44.5-47.4 48.7-3.8 5.9-1.1 15.5 5.1 17.9 4.2 1.6 9.7 1 13-1.4 3.1-2.2 40.2-40.7 44.3-45.9 8.1-10.4-3.7-25.6-15-19.3" />
   </svg>
-);
-export default LocalBusinessIcon;
-
+)
+export default LocalBusinessIcon
