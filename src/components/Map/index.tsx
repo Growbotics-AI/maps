@@ -1,5 +1,6 @@
+import { Map as LeafletMap } from 'leaflet'
 import dynamic from 'next/dynamic'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useResizeDetector } from 'react-resize-detector'
 
 import MapTopBar from '#components/TopBar'
@@ -7,28 +8,34 @@ import { AppConfig } from '#lib/AppConfig'
 import MarkerCategories, { Category } from '#lib/MarkerCategories'
 import { Places } from '#lib/Places'
 
-import LeafleftMapContextProvider from './LeafletMapContextProvider'
+import LeafletMapContextProvider from './LeafletMapContextProvider'
 import useMapContext from './useMapContext'
 import useMarkerData from './useMarkerData'
 
 const LeafletCluster = dynamic(async () => (await import('./LeafletCluster')).LeafletCluster(), {
   ssr: false,
 })
+
 const CenterToMarkerButton = dynamic(async () => (await import('./ui/CenterButton')).CenterButton, {
   ssr: false,
 })
+
 const CustomMarker = dynamic(async () => (await import('./LeafletMarker')).CustomMarker, {
   ssr: false,
 })
+
 const LocateButton = dynamic(async () => (await import('./ui/LocateButton')).LocateButton, {
   ssr: false,
 })
+
 const LeafletMapContainer = dynamic(async () => (await import('./LeafletMapContainer')).LeafletMapContainer, {
   ssr: false,
 })
 
 const LeafletMapInner = () => {
   const { map } = useMapContext()
+  const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(undefined)
+
   const {
     width: viewportWidth,
     height: viewportHeight,
@@ -40,28 +47,37 @@ const LeafletMapInner = () => {
 
   const { clustersByCategory, allMarkersBoundCenter } = useMarkerData({
     locations: Places,
-    map,
+    map: leafletMap,
     viewportWidth,
     viewportHeight,
   })
 
-  const isLoading = !map || !viewportWidth || !viewportHeight
+  const isLoading = !leafletMap || !viewportWidth || !viewportHeight
+
+  useEffect(() => {
+    if (map) {
+      setLeafletMap(map)
+    }
+  }, [map])
 
   /** watch position & zoom of all markers */
   useEffect(() => {
-    if (!allMarkersBoundCenter || !map) return
+    if (!allMarkersBoundCenter || !leafletMap) return
 
     const moveEnd = () => {
-      map.off('moveend', moveEnd)
+      leafletMap.off('moveend', moveEnd)
     }
 
-    map.flyTo(allMarkersBoundCenter.centerPos, allMarkersBoundCenter.minZoom, { animate: false })
-    map.once('moveend', moveEnd)
-  }, [allMarkersBoundCenter, map])
+    leafletMap.flyTo(allMarkersBoundCenter.centerPos, allMarkersBoundCenter.minZoom, {
+      animate: false,
+    })
+
+    leafletMap.once('moveend', moveEnd)
+  }, [allMarkersBoundCenter, leafletMap])
 
   return (
     <div className="absolute h-full w-full overflow-hidden" ref={viewportRef}>
-      <MapTopBar />
+      <MapTopBar map={leafletMap} />
       <div
         className={`absolute left-0 w-full transition-opacity ${isLoading ? 'opacity-0' : 'opacity-1 '}`}
         style={{
@@ -111,9 +127,9 @@ const LeafletMapInner = () => {
 
 // pass through to get context in <MapInner>
 const Map = () => (
-  <LeafleftMapContextProvider>
+  <LeafletMapContextProvider>
     <LeafletMapInner />
-  </LeafleftMapContextProvider>
+  </LeafletMapContextProvider>
 )
 
 export default Map

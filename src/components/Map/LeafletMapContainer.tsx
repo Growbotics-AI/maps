@@ -13,6 +13,7 @@ export const LeafletMapContainer = ({ children, ...props }: LeafletMapContainerP
 
   useEffect(() => {
     if (!setLeafletLib) return
+
     import('leaflet').then(leaflet => {
       setLeafletLib(leaflet)
     })
