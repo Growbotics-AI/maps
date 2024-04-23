@@ -1,6 +1,5 @@
 import { Map } from 'leaflet'
 import { Search, Sliders } from 'lucide-react'
-import nominatim, { SearchResultItem } from 'nominatim-client'
 import { useEffect, useState } from 'react'
 
 import { AppConfig, NavMenuVariant } from '#lib/AppConfig'
@@ -13,7 +12,7 @@ interface NavMenuProps {
 const NavMenu = ({ variant = NavMenuVariant.TOPNAV, map }: NavMenuProps) => {
   const navIconSize = AppConfig.ui.topBarIconSize
   const [L, setL] = useState<typeof import('leaflet') | null>(null)
-  const [searchResult, setSearchResult] = useState<SearchResultItem[] | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     import('leaflet').then(leaflet => {
@@ -21,39 +20,28 @@ const NavMenu = ({ variant = NavMenuVariant.TOPNAV, map }: NavMenuProps) => {
     })
   }, [])
 
-  useEffect(() => {
-    if (searchResult && searchResult.length > 0) {
-      const { lat, lon } = searchResult[0]
-
-      if (lat && lon && L && map) {
-        const latLng = L.latLng(parseFloat(lat), parseFloat(lon))
-        map.setView(latLng, 13)
-      }
-    }
-  }, [searchResult, L, map])
-
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const searchTerm = event.currentTarget.elements.namedItem('search') as HTMLInputElement
-
     try {
-      const client = nominatim.createClient({
-        useragent: 'Growbotics AI Map',
-        referer: 'https://maps.growbotics.ai/',
-      })
-
-      const query = {
-        q: searchTerm.value,
-        addressdetails: 1 as const,
-        limit: 1,
+      const response = await fetch(`/api/nominatim?q=${encodeURIComponent(searchTerm)}`)
+      const result = await response.json()
+      if (result.length > 0) {
+        const { lat, lon } = result[0]
+        if (lat && lon && L && map) {
+          const latLng = L.latLng(parseFloat(lat), parseFloat(lon))
+          map.setView(latLng, 13)
+        }
       }
-
-      const result = await client.search(query)
-      setSearchResult(result)
     } catch (error) {
-      // Handle the error or log it using an appropriate logging mechanism
-      // Example: log the error to a server-side logging service or display an error message to the user
+      // eslint-disable-next-line no-console
+      console.error('Error during search:', error)
+      // eslint-disable-next-line no-alert
+      alert('An error occurred while searching. Please check the console for more details.')
     }
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
   }
 
   // Determine the appropriate CSS classes based on the variant
@@ -71,6 +59,8 @@ const NavMenu = ({ variant = NavMenuVariant.TOPNAV, map }: NavMenuProps) => {
           className="placeholder-gray-400 ml-2 flex-grow border-none bg-transparent px-4 py-2 text-base focus:outline-none"
           type="search"
           placeholder="Search for locations..."
+          value={searchTerm}
+          onChange={handleInputChange}
         />
         <button type="submit" className="text-gray-500 bg-gray-200 ml-2 rounded-full p-2">
           <Sliders size={navIconSize} />
