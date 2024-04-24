@@ -6,7 +6,7 @@
   "author": "Tomas Ramanauskas <https://github.com/Tomas0413>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Growbotics-AI/maps" 
+    "url": "https://github.com/Growbotics-AI/maps"
   },
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
@@ -19,15 +19,15 @@
     "leaflet": "^1.9.3",
     "leaflet.markercluster": "^1.5.3",
     "lucide-react": "^0.121.0",
-    "next": "^14.1.3",
+    "next": "^14.2.3",
+    "node-ipinfo": "^3.5.1",
+    "nominatim-client": "^3.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-leaflet": "^4.2.1",
     "react-resize-detector": "^8.0.4",
-    "tailwindcss": "^3.2.6",
-    "node-ipinfo": "^3.5.1",
-    "nominatim-client": "^3.2.1"
+    "tailwindcss": "^3.2.6"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.2.0",

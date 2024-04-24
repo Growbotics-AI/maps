@@ -18,6 +18,7 @@ export interface CustomMarkerProps {
 
 export const CustomMarker = ({ place }: CustomMarkerProps) => {
   const { map } = useMapContext()
+
   const markerCategory = useMemo(() => MarkerCategories[place.category], [place.category])
 
   const handlePopupClose = useCallback(() => {
@@ -33,9 +34,14 @@ export const CustomMarker = ({ place }: CustomMarkerProps) => {
 
   // some event for the inner popup cta
   const handleOpenLocation = useCallback(() => {
-    // eslint-disable-next-line no-console
-    console.log('open location')
+    // Handle open location logic here
   }, [])
+
+  if (!markerCategory) {
+    // eslint-disable-next-line no-console
+    console.warn('Marker category not found for place:', place)
+    return null
+  }
 
   return (
     <ReactMarker

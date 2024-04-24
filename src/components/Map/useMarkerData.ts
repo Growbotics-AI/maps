@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import useMapContext from '#components/Map/useMapContext'
 import { AppConfig } from '#lib/AppConfig'
+import { Category } from '#lib/MarkerCategories'
 import { PlacesClusterType, PlacesType } from '#lib/Places'
 
 interface useMapDataValues {
@@ -23,12 +24,11 @@ const useMarkerData = ({ locations, map, viewportWidth, viewportHeight }: useMap
     minZoom: AppConfig.minZoom - 5,
     centerPos: AppConfig.baseCenter,
   })
-
   const { leafletLib } = useMapContext()
 
   // get bounds of all markers
   const allMarkerBounds = useMemo(() => {
-    if (!locations || !leafletLib) return undefined
+    if (!locations || !leafletLib || locations.length === 0) return undefined
 
     const coordsSum: LatLngExpression[] = []
     locations.forEach(item => {
@@ -41,19 +41,32 @@ const useMarkerData = ({ locations, map, viewportWidth, viewportHeight }: useMap
   const clustersByCategory = useMemo(() => {
     if (!locations) return undefined
 
+    const categoryMapping: Record<string, Category> = {
+      DIGITAL_FACTORIES: Category.DIGITAL_FACTORIES,
+      ROBOSMITHS: Category.ROBOSMITHS,
+      TECHNO_FARMERS: Category.TECHNO_FARMERS,
+    }
+
     const groupedLocations = locations.reduce<PlacesClusterType>((acc, location) => {
       const { category } = location
-      if (!acc[category]) {
-        acc[category] = []
+      const mappedCategory = categoryMapping[category]
+      if (mappedCategory !== undefined) {
+        if (!acc[mappedCategory]) {
+          acc[mappedCategory] = []
+        }
+        acc[mappedCategory].push(location)
       }
-      acc[category].push(location)
       return acc
     }, {})
 
-    const mappedClusters = Object.keys(groupedLocations).map(key => ({
-      category: Number(key),
-      markers: groupedLocations[key],
+    const mappedClusters = Object.entries(groupedLocations).map(([key, markers]) => ({
+      category: key as Category,
+      markers,
     }))
+
+    // Log the grouped locations and mapped clusters for debugging purposes
+    // console.log('Grouped locations:', groupedLocations)
+    // console.log('Mapped clusters:', mappedClusters)
 
     return mappedClusters
   }, [locations])
@@ -93,9 +106,17 @@ const useMarkerData = ({ locations, map, viewportWidth, viewportHeight }: useMap
     if (!viewportWidth || !viewportHeight) return
 
     map.invalidateSize()
+
+    const minZoom = map.getBoundsZoom(allMarkerBounds)
+    const centerPos: LatLngExpression = [allMarkerBounds.getCenter().lat, allMarkerBounds.getCenter().lng]
+
+    // Log the min zoom and center position for debugging purposes
+    // console.log('Min zoom:', minZoom)
+    // console.log('Center position:', centerPos)
+
     setAllMarkersBoundCenter({
-      minZoom: map.getBoundsZoom(allMarkerBounds),
-      centerPos: [allMarkerBounds.getCenter().lat, allMarkerBounds.getCenter().lng],
+      minZoom,
+      centerPos,
     })
   }, [allMarkerBounds, map, viewportWidth, viewportHeight])
 

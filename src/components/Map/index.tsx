@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 import { useResizeDetector } from 'react-resize-detector'
 
 import MapTopBar from '#components/TopBar'
+import { fetchPlaces } from '#lib/api/placesApi'
 import { AppConfig } from '#lib/AppConfig'
 import MarkerCategories, { Category } from '#lib/MarkerCategories'
-import { Places } from '#lib/Places'
+import { PlacesType } from '#lib/Places'
 
 import LeafletMapContextProvider from './LeafletMapContextProvider'
 import useMapContext from './useMapContext'
@@ -35,6 +36,7 @@ const LeafletMapContainer = dynamic(async () => (await import('./LeafletMapConta
 const LeafletMapInner = () => {
   const { map } = useMapContext()
   const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(undefined)
+  const [places, setPlaces] = useState<PlacesType>([])
 
   const {
     width: viewportWidth,
@@ -45,12 +47,27 @@ const LeafletMapInner = () => {
     refreshRate: 200,
   })
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchPlaces()
+      // Log the fetched places data for debugging purposes
+      // console.log('Fetched places data:', data)
+      setPlaces(data)
+    }
+
+    fetchData()
+  }, [])
+
   const { clustersByCategory, allMarkersBoundCenter } = useMarkerData({
-    locations: Places,
+    locations: places,
     map: leafletMap,
     viewportWidth,
     viewportHeight,
   })
+
+  // Log the clustersByCategory and allMarkersBoundCenter for debugging purposes
+  // console.log('clustersByCategory:', clustersByCategory)
+  // console.log('allMarkersBoundCenter:', allMarkersBoundCenter)
 
   const isLoading = !leafletMap || !viewportWidth || !viewportHeight
 
@@ -100,18 +117,24 @@ const LeafletMapInner = () => {
                   zoom={allMarkersBoundCenter.minZoom}
                 />
                 <LocateButton />
-                {Object.values(clustersByCategory).map(item => (
-                  <LeafletCluster
-                    key={item.category}
-                    icon={MarkerCategories[item.category as Category].icon}
-                    color={MarkerCategories[item.category as Category].color}
-                    chunkedLoading
-                  >
-                    {item.markers.map(marker => (
-                      <CustomMarker place={marker} key={marker.id} />
-                    ))}
-                  </LeafletCluster>
-                ))}
+                {Object.values(clustersByCategory).map(item => {
+                  const markerCategory = MarkerCategories[item.category as Category]
+                  if (markerCategory) {
+                    return (
+                      <LeafletCluster
+                        key={item.category}
+                        icon={markerCategory.icon}
+                        color={markerCategory.color}
+                        chunkedLoading
+                      >
+                        {item.markers.map(marker => (
+                          <CustomMarker place={marker} key={marker.id} />
+                        ))}
+                      </LeafletCluster>
+                    )
+                  }
+                  return null
+                })}
               </>
             ) : (
               // we have to spawn at least one element to keep it happy
