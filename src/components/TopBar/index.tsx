@@ -1,24 +1,26 @@
 import { Map } from 'leaflet'
+import { FC } from 'react'
 
 import { NavMenuVariant } from '#lib/AppConfig'
 
 import NavMenu from '../common/NavMenu'
 
-interface MapTopBarProps {
-  map: Map | undefined
+interface TopBarProps {
+  variant?: NavMenuVariant
+  map?: Map // Replaced any with the leaflet Map type
 }
 
-const MapTopBar = ({ map }: MapTopBarProps) => (
-  <div
-    className="absolute left-0 top-0 flex h-20 w-full items-center p-3 shadow"
+const TopBar: FC<TopBarProps> = ({ variant = NavMenuVariant.TOPNAV, map }) => (
+  <header
+    className="flex h-20 w-full items-center p-3 shadow"
     style={{ backgroundColor: '#1F2937', zIndex: 1000 }}
   >
     <div className="flex w-full items-center justify-between">
-      {/* <LatLngLogo /> */}
-      <NavMenu variant={NavMenuVariant.TOPNAV} map={map} />
-      {/* If you have more items on the right side, you can add them here */}
+      {/* Add your logo or other elements here */}
+      <NavMenu variant={variant} map={map} />
+      {/* Add other right-aligned elements as needed */}
     </div>
-  </div>
+  </header>
 )
 
-export default MapTopBar
+export default TopBar

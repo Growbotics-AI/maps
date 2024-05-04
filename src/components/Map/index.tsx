@@ -38,20 +38,11 @@ const LeafletMapInner = () => {
   const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(undefined)
   const [places, setPlaces] = useState<PlacesType>([])
 
-  const {
-    width: viewportWidth,
-    height: viewportHeight,
-    ref: viewportRef,
-  } = useResizeDetector({
-    refreshMode: 'debounce',
-    refreshRate: 200,
-  })
+  const { ref: viewportRef } = useResizeDetector()
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPlaces()
-      // Log the fetched places data for debugging purposes
-      // console.log('Fetched places data:', data)
       setPlaces(data)
     }
 
@@ -61,15 +52,9 @@ const LeafletMapInner = () => {
   const { clustersByCategory, allMarkersBoundCenter } = useMarkerData({
     locations: places,
     map: leafletMap,
-    viewportWidth,
-    viewportHeight,
   })
 
-  // Log the clustersByCategory and allMarkersBoundCenter for debugging purposes
-  // console.log('clustersByCategory:', clustersByCategory)
-  // console.log('allMarkersBoundCenter:', allMarkersBoundCenter)
-
-  const isLoading = !leafletMap || !viewportWidth || !viewportHeight
+  const isLoading = !leafletMap
 
   useEffect(() => {
     if (map) {
@@ -77,7 +62,6 @@ const LeafletMapInner = () => {
     }
   }, [map])
 
-  /** watch position & zoom of all markers */
   useEffect(() => {
     if (!allMarkersBoundCenter || !leafletMap) return
 
@@ -93,14 +77,13 @@ const LeafletMapInner = () => {
   }, [allMarkersBoundCenter, leafletMap])
 
   return (
-    <div className="absolute h-full w-full overflow-hidden" ref={viewportRef}>
+    <div className="relative h-full w-full" ref={viewportRef}>
       <MapTopBar map={leafletMap} />
       <div
-        className={`absolute left-0 w-full transition-opacity ${isLoading ? 'opacity-0' : 'opacity-1 '}`}
+        className={`absolute left-0 w-full transition-opacity ${isLoading ? 'opacity-0' : 'opacity-1'}`}
         style={{
-          top: AppConfig.ui.topBarHeight,
-          width: viewportWidth ?? '100%',
-          height: viewportHeight ? viewportHeight - AppConfig.ui.topBarHeight : '100%',
+          top: AppConfig.ui.topBarHeight, // Align map directly below the top bar
+          height: `calc(100vh - ${AppConfig.ui.topBarHeight}px)`, // Set the map height relative to the top bar
         }}
       >
         {allMarkersBoundCenter && clustersByCategory && (
@@ -110,7 +93,9 @@ const LeafletMapInner = () => {
             maxZoom={AppConfig.maxZoom}
             minZoom={AppConfig.minZoom}
           >
-            {!isLoading ? (
+            {isLoading ? (
+              [] // Instead of `null`, pass an empty array
+            ) : (
               <>
                 <CenterToMarkerButton
                   center={allMarkersBoundCenter.centerPos}
@@ -136,10 +121,6 @@ const LeafletMapInner = () => {
                   return null
                 })}
               </>
-            ) : (
-              // we have to spawn at least one element to keep it happy
-              // eslint-disable-next-line react/jsx-no-useless-fragment
-              <></>
             )}
           </LeafletMapContainer>
         )}
@@ -148,7 +129,6 @@ const LeafletMapInner = () => {
   )
 }
 
-// pass through to get context in <MapInner>
 const Map = () => (
   <LeafletMapContextProvider>
     <LeafletMapInner />
