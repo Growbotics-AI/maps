@@ -27,14 +27,9 @@ const items: ISidebarItem[] = [
     path: '/my-listings',
     icon: List,
     items: [
-      {
-        name: 'Add Listing',
-        path: '/my-listings/add',
-      },
-      {
-        name: 'Claim Listing',
-        path: '/my-listings/claim',
-      },
+      { name: 'Listings', path: '/my-listings' },
+      { name: 'Add Listing', path: '/my-listings/add' },
+      { name: 'Claim Listing', path: '/my-listings/claim' },
     ],
   },
   {
