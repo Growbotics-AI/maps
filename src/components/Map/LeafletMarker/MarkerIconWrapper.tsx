@@ -23,7 +23,7 @@ const MarkerIconWrapper = ({ icon, color, label }: MarkerIconWrapperProps) => {
       >
         {IconFC && <IconFC size={AppConfig.ui.markerIconSize} />}
         {label && (
-          <span className="absolute -top-2 -right-2 flex h-7 w-7 flex-col items-center rounded-full border-2 border-white bg-error pt-1 text-xs">
+          <span className="absolute -right-2 -top-2 flex h-7 w-7 flex-col items-center rounded-full border-2 border-white bg-error pt-1 text-xs">
             {label}
           </span>
         )}
