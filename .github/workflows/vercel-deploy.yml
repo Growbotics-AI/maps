@@ -3,23 +3,27 @@ name: Deploy to Vercel
 on:
   push:
     branches:
-      - main  # Triggers the action on push events to the main branch.
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Specifies the runner.
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2  # Checks out your repository under $GITHUB_WORKSPACE, so the job can access it.
+    - uses: actions/checkout@v3  # Updated to v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'  # Set Node.js version to 20
 
     - name: Install dependencies
-      run: npm install  # Installs project dependencies.
+      run: npm install
 
     - name: Build the project
-      run: npm run build  # Builds your project.
+      run: npm run build
 
     - name: Deploy to Vercel
-      run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod  # Deploys the project to Vercel.
+      run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
