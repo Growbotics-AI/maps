@@ -37,17 +37,20 @@ const LeafletMapInner = () => {
   const { map } = useMapContext()
   const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(undefined)
   const [places, setPlaces] = useState<PlacesType>([])
-
   const { ref: viewportRef } = useResizeDetector()
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPlaces()
-      setPlaces(data)
+      if (leafletMap) {
+        const { lat, lng } = leafletMap.getCenter()
+        const data = await fetchPlaces(lat, lng, 1000000)
+
+        setPlaces(data)
+      }
     }
 
     fetchData()
-  }, [])
+  }, [leafletMap])
 
   const { clustersByCategory, allMarkersBoundCenter } = useMarkerData({
     locations: places,
