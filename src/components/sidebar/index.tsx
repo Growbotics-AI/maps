@@ -2,6 +2,7 @@ import { HelpCircle, List, LogIn, LogOut, LucideIcon, MapPin, Settings } from 'l
 import { useState } from 'react'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
 
+import { useUser } from '../../lib/UserContext'
 import SidebarItem from './item'
 
 interface ISidebarItem {
@@ -16,46 +17,48 @@ interface ISubItem {
   path: string
 }
 
-const items: ISidebarItem[] = [
-  {
-    name: 'Map',
-    path: '/',
-    icon: MapPin,
-  },
-  {
-    name: 'My Listings',
-    path: '/my-listings',
-    icon: List,
-    items: [
-      { name: 'Listings', path: '/my-listings' },
-      { name: 'Add Listing', path: '/my-listings/add' },
-      { name: 'Claim Listing', path: '/my-listings/claim' },
-    ],
-  },
-  {
-    name: 'Support',
-    path: '/support',
-    icon: HelpCircle,
-  },
-  {
-    name: 'Settings',
-    path: '/settings',
-    icon: Settings,
-  },
-  {
-    name: 'Sign In',
-    path: '/signin',
-    icon: LogIn,
-  },
-  {
-    name: 'Sign Out',
-    path: '/signout',
-    icon: LogOut,
-  },
-]
-
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const { user } = useUser()
+
+  const items: (ISidebarItem | null)[] = [
+    {
+      name: 'Map',
+      path: '/',
+      icon: MapPin,
+    },
+    {
+      name: 'Support',
+      path: '/support',
+      icon: HelpCircle,
+    },
+    user
+      ? {
+          name: 'My Listings',
+          path: '/my-listings',
+          icon: List,
+          items: [
+            { name: 'Listings', path: '/my-listings' },
+            { name: 'Add Listing', path: '/my-listings/add' },
+            { name: 'Claim Listing', path: '/my-listings/claim' },
+          ],
+        }
+      : null,
+    user
+      ? {
+          name: 'Settings',
+          path: '/settings',
+          icon: Settings,
+        }
+      : null,
+    {
+      name: user ? 'Sign Out' : 'Sign In',
+      path: '/auth',
+      icon: user ? LogOut : LogIn,
+    },
+  ]
+
+  const validItems: ISidebarItem[] = items.filter(item => item !== null) as ISidebarItem[]
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
@@ -71,7 +74,7 @@ const Sidebar = () => {
         {isCollapsed ? <MdKeyboardArrowRight size={24} /> : <MdKeyboardArrowLeft size={24} />}
       </button>
       <nav className="flex grow flex-col space-y-2">
-        {items.map(item => (
+        {validItems.map(item => (
           <SidebarItem key={item.path} item={item} isCollapsed={isCollapsed} />
         ))}
       </nav>

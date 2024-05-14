@@ -9,6 +9,8 @@ import '#src/globals.css'
 
 import { SessionProvider } from 'next-auth/react'
 
+import { UserProvider } from '../lib/UserContext'
+
 const catamaran = Catamaran({
   subsets: ['latin'],
   variable: '--font-catamaran',
@@ -21,9 +23,11 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => (
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <SessionProvider session={session}>
-      <main className={`${catamaran.variable} font-sans text-base`}>
-        <Component {...pageProps} />
-      </main>
+      <UserProvider>
+        <main className={`${catamaran.variable} font-sans text-base`}>
+          <Component {...pageProps} />
+        </main>
+      </UserProvider>
     </SessionProvider>
   </>
 )
