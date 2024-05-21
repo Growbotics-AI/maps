@@ -34,8 +34,10 @@ export const CustomMarker = ({ place }: CustomMarkerProps) => {
 
   // some event for the inner popup cta
   const handleOpenLocation = useCallback(() => {
-    // Handle open location logic here
-  }, [])
+    if (place.website) {
+      window.open(place.website, '_blank')
+    }
+  }, [place.website])
 
   if (!markerCategory) {
     // eslint-disable-next-line no-console

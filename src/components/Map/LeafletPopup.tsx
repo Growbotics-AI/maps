@@ -25,7 +25,7 @@ const LeafletPopup = ({
   item,
   ...props
 }: LeafletPopupProps) => {
-  const { title, address } = item
+  const { title, address, website } = item
 
   return (
     <Popup {...props}>
@@ -56,6 +56,13 @@ const LeafletPopup = ({
           >
             <h3 className="m-0 text-lg font-bold leading-none">{title}</h3>
             <p className="m-0 text-secondary">{address}</p>
+            {website && (
+              <p className="m-0 text-secondary">
+                <a href={website} target="_blank" rel="noopener noreferrer">
+                  {website}
+                </a>
+              </p>
+            )}
             {/* todo: new component for button group */}
             <div className="mt-6 flex flex-row justify-between gap-2 p-2">
               <Button className="gap-2 bg-secondary text-white" onClick={() => handlePopupClose()} small>
